@@ -1,0 +1,20 @@
+@startuml Asos.Orders.Intake.PosItem.Function
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define AzurePuml https://raw.githubusercontent.com/plantuml-stdlib/Azure-PlantUML/master/dist
+!includeurl AzurePuml/AzureCommon.puml
+!includeurl AzurePuml/Integration/all.puml
+!includeurl AzurePuml/Compute/AzureFunction.puml
+!includeurl AzurePuml/Databases/AzureSqlDatabase.puml
+!includeurl AzurePuml/DevOps/AzureApplicationInsights.puml
+
+LAYOUT_LEFT_RIGHT()
+AzureServiceBusTopic(unabletoship, "order-intake", "positem.unabletoship")
+AzureServiceBusTopic(dtcitemsunabletoship, "order-intake", "positem.dtcitemsunabletoship")
+AzureFunction(positem, "Asos.Orders.Intake.PosItem.Func", "")
+database Backoffice
+
+Rel(unabletoship, positem, "[Asos.EnclosedType] = UnableToShipEventV2")
+Rel(dtcitemsunabletoship, positem, "[Asos.EnclosedType] = DtcItemsUnableToShipV1")
+Rel(positem, Backoffice, "Update PosItem.DateShipped")
+
+@enduml
